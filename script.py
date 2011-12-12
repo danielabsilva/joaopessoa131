@@ -16,7 +16,7 @@ entidades = {
     }
 
 def monta_url():
-    for ano in range(2010,2011):
+    for ano in range(2010,2012):
         for mes in range(1,13):
             for entidade in entidades.iterkeys():
                 url_base = "http://www2.joaopessoa.pb.gov.br:8080/lei131/DespesaEntidadeIndireta?ano=" + str(ano) + "&mes=" + str(mes) + "&entidade=" + entidade
