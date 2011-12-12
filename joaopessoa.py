@@ -2,8 +2,10 @@
 import urllib
 from lxml.html import parse
 import json
+from webstore.client import Database
 
-arquivo = urllib.urlopen("empenhos.json")
+url = "http://0.0.0.0:5000/test/joaopessoa131/empenhos.json?_limit=1000&_offset=0"
+arquivo = urllib.urlopen(url)
 
 def pega_link():
 	empenhos = json.load(arquivo)
@@ -14,6 +16,7 @@ def pega_link():
 			pega_dados(empenho["link_empenho"])
 
 def pega_dados(url_base):
+	database = Database('0.0.0.0', 'test', 'joaopessoa131', port="5000")
 	html = parse(url_base).getroot()
 	tabela = html.cssselect(".tabelaDetalhe")[0]
 	linhas = tabela.cssselect("tr")
@@ -38,7 +41,8 @@ def pega_dados(url_base):
 		valores["parcela"] = linha2.cssselect("td")[2].text
 		valores["valor"] = linha2.cssselect("td")[3].text
 		data["valores"].append(valores)
-	print data
+	data["valores"] = json.dumps(data["valores"])
+	database['empenhos_detalhe'].writerow(data, unique_columns=['n_empenho'])
 
 pega_link()
 

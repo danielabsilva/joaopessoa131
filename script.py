@@ -17,12 +17,14 @@ entidades = {
 
 def monta_url():
     for ano in range(2010,2011):
-        for mes in range(1,12):
+        for mes in range(1,13):
             for entidade in entidades.iterkeys():
                 url_base = "http://www2.joaopessoa.pb.gov.br:8080/lei131/DespesaEntidadeIndireta?ano=" + str(ano) + "&mes=" + str(mes) + "&entidade=" + entidade
                 extract(url_base, entidades[entidade], entidade, ano, mes)
    
 def extract(url_base, entidade, id_entidade, ano, mes):
+    print "Getting " + entidade + " do mês " + str(mes) + " de " + str(ano)
+
     database = Database('0.0.0.0', 'test', 'joaopessoa131', port="5000")
     html = parse(url_base).getroot()
     tabela = html.cssselect(".bordatabela2")[0]
@@ -43,6 +45,5 @@ def extract(url_base, entidade, id_entidade, ano, mes):
         data["ano"] = str(ano)
         data["mes"] = str(mes)
         database['empenhos'].writerow(data, unique_columns=['n_empenho'])
-        print data
 
 monta_url()
